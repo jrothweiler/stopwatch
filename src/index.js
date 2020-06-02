@@ -56,7 +56,7 @@ function lapOrResetTimer() {
         // trigger a reset: set timer to 0, go back to disabled lap button, clear laps
         centisecondsOnTimer = 0;
         updateTimer();
-        
+
         lapResetButton.disabled = true;
         lapResetButton.innerHTML = "Lap";
 
@@ -78,6 +78,8 @@ function toggleTimer() {
         // start timer, change button to stop timer, enable lap button
         countingIntervalId = setInterval(incrementTimer, 10);
         toggleButton.innerHTML = "Stop";
+
+        lapResetButton.innerHTML = "Lap";
         lapResetButton.disabled = false;
     }
     isCounting = !isCounting;
