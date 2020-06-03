@@ -13,6 +13,30 @@
 body {
   background-color: black;
   color: white;
+  max-width: 250px;
+}
+
+#timer {
+  font-size: 64px;
+  font-family: HelveticaNeue-UltraLight;
+}
+
+#lapTable {
+  font-family: Helvetica;
+  width: 100%;
+}
+
+#buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+#toggleButton {
+  size: 16px;
+}
+
+#lapResetButton {
+  size: 16px;
 }
 
 .bestTime {
@@ -21,4 +45,11 @@ body {
 
 .worstTime {
   color: red;
+}
+
+td:nth-child(odd) {
+  text-align: start;
+}
+td:nth-child(even) {
+  text-align: end;
 }
