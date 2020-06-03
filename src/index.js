@@ -117,10 +117,14 @@ function toggleTimer() {
         clearInterval(countingIntervalId);
         toggleButton.innerHTML = "Start";
         lapResetButton.innerHTML = "Reset";
+        toggleButton.classList.add("stopped");
+        toggleButton.classList.remove("started");
     } else {
         // start timer, change button to stop timer, enable lap button
         countingIntervalId = setInterval(updateTimer, 10);
         toggleButton.innerHTML = "Stop";
+        toggleButton.classList.add("started");
+        toggleButton.classList.remove("stopped");
 
         lapResetButton.innerHTML = "Lap";
         lapResetButton.disabled = false;

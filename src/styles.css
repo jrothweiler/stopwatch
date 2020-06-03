@@ -17,6 +17,8 @@ body {
 }
 
 #timer {
+  height: 200px;
+  line-height: 200px;
   font-size: 64px;
   font-family: "Helvetica Neue";
 }
@@ -28,9 +30,35 @@ body {
   border-collapse: collapse;
 }
 
-#buttons {
+#actionButtons {
   display: flex;
   justify-content: space-between;
+}
+
+#actionButtons button {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  color: white;
+  border-style: none;
+}
+
+#toggleButton.started {
+  background-color: darkred;
+  color: red;
+}
+
+#toggleButton.stopped {
+  background-color: #336600;
+  color: lightgreen;
+}
+
+#lapResetButton {
+  background-color: grey;
+}
+
+#lapResetButton:disabled {
+  background-color: #404040;
 }
 
 .bestTime {
