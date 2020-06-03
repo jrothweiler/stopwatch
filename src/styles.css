@@ -14,3 +14,11 @@ body {
   background-color: black;
   color: white;
 }
+
+.bestTime {
+  color: green;
+}
+
+.worstTime {
+  color: red;
+}

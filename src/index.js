@@ -9,6 +9,9 @@ var lapTimes = [];
 // for use in calculating the next laps total time. 
 // null is interpretted as 0 for first lap.
 var lastLapStopwatchTime = null;
+var bestLapTime = Infinity;
+var worstLapTime = -Infinity;
+
 
 // the previous time to compare against for incrementing the timer.
 // is set to the current time when the start button is clicked, 
@@ -45,9 +48,28 @@ function updateTimer() {
 
 // update lap list html with current lap state.
 function updateLapList() {
-    let lapListElement = document.getElementById("lapList");
-    // for now, just separating times by spaces is fine.
-    lapListElement.innerHTML = lapTimes.join(" ");
+    console.log(bestLapTime);
+    console.log(worstLapTime);
+    let lapTable = document.getElementById("lapTable");
+    lapTable.textContent = '';
+    for (let i =  1; i <= lapTimes.length; i++) {
+        let lap = lapTimes[i - 1];
+        let tableEntry = document.createElement('tr');
+        if (bestLapTime != worstLapTime) {
+            if (bestLapTime == lap) {
+                tableEntry.classList.add('bestTime');
+            } else if (worstLapTime == lap) {
+                tableEntry.classList.add('worstTime');
+            } 
+        }
+        let lapNumber = document.createElement('td');
+        let lapTime = document.createElement('td');
+        lapNumber.innerHTML = `Lap ${i}`;
+        lapTime.innerHTML = formatTimeForTimer(lap); 
+        tableEntry.appendChild(lapNumber);
+        tableEntry.appendChild(lapTime);
+        lapTable.appendChild(tableEntry);
+    }
 }
 
 // functionality for left button, which is either reset or lap
@@ -57,7 +79,14 @@ function lapOrResetTimer() {
     if (isCounting) {
         // trigger a lap: calculate new lap time, add to array of laps, update html
         let lapDuration = millisecondsOnTimer - lastLapStopwatchTime;
-        let lapDurationString = formatTimeForTimer(lapDuration);
+        if (lapDuration > worstLapTime) {
+            worstLapTime = lapDuration; 
+        }
+        if (lapDuration < bestLapTime) {
+            bestLapTime = lapDuration;
+        }
+
+        let lapDurationString = lapDuration;
         lapTimes.push(lapDurationString);
         lastLapStopwatchTime = millisecondsOnTimer;
         updateLapList();
@@ -66,6 +95,9 @@ function lapOrResetTimer() {
         millisecondsOnTimer = 0;
         lastRecordedStopwatchTime = null;
         updateTimer();
+
+        bestLapTime = Infinity;
+        worstLapTime = -Infinity;
 
         lapResetButton.disabled = true;
         lapResetButton.innerHTML = "Lap";
