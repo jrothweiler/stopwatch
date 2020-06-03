@@ -18,25 +18,19 @@ body {
 
 #timer {
   font-size: 64px;
-  font-family: HelveticaNeue-UltraLight;
+  font-family: "Helvetica Neue";
 }
 
 #lapTable {
-  font-family: Helvetica;
+  font-family: "Helvetica Neue Roman";
   width: 100%;
+  margin-top: 24px;
+  border-collapse: collapse;
 }
 
 #buttons {
   display: flex;
   justify-content: space-between;
-}
-
-#toggleButton {
-  size: 16px;
-}
-
-#lapResetButton {
-  size: 16px;
 }
 
 .bestTime {
@@ -47,9 +41,18 @@ body {
   color: red;
 }
 
-td:nth-child(odd) {
+
+#lapTable tr {
+  height: 32px;
+}
+#lapTable td {
+  border-style: solid;
+  border-color: #202020;
+  border-width: 1px 0px;
+}
+#lapTable td:nth-child(odd) {
   text-align: start;
 }
-td:nth-child(even) {
+#lapTable td:nth-child(even) {
   text-align: end;
 }
