@@ -1,6 +1,7 @@
 let isCounting = false;
 let countingIntervalId = -1;
-let millisecondsOnTimer = 0;
+let millisecondsPaused = 0;
+let millisecondsPausedSinceLastLap = 0;
 
 // Array of lap times, or how long it took to complete each lap.
 let lapTimes = [];
@@ -17,6 +18,7 @@ let worstLapTime = -Infinity;
 // is set to the current time when the start button is clicked, 
 // or when the timer is updated while running.
 let lastRecordedStopwatchTime = null;
+let startingTime = null;
 
 // format a number for use in the timer, i.e. pad numbers less than 10 with leading zeroes
 function padNumber(value) {
@@ -37,13 +39,9 @@ function formatTimeForTimer(elapsedTime) {
 // properly formatted.
 function updateTimer() {
     let timer = document.getElementById("timer");
-    if (isCounting) {
-        let currentTime = Date.now();
-        let millisecondsElapsed = currentTime - lastRecordedStopwatchTime;
-        millisecondsOnTimer += millisecondsElapsed;
-        lastRecordedStopwatchTime = currentTime;
-    }
-    document.getElementById("timer").innerText = formatTimeForTimer(millisecondsOnTimer);
+    let currentTime = Date.now();
+    let totalTime = currentTime - startingTime - millisecondsPaused;
+    timer.innerText = formatTimeForTimer(totalTime);
 }
 
 // update lap list html with the new time entry
@@ -94,8 +92,9 @@ function updateLapList(newTime) {
 function lapOrResetTimer() {
     let lapResetButton = document.getElementById("lapResetButton");
     if (isCounting) {
+        let currentTime = Date.now();
         // trigger a lap: calculate new lap time
-        let lapDuration = millisecondsOnTimer - lastLapStopwatchTime;
+        let lapDuration = currentTime - lastLapStopwatchTime - millisecondsPausedSinceLastLap;
 
         // update best and worst times if able
         if (lapDuration > worstLapTime) {
@@ -107,13 +106,19 @@ function lapOrResetTimer() {
 
         // add to array of laps, update html
         lapTimes.unshift(lapDuration);
-        lastLapStopwatchTime = millisecondsOnTimer;
+        
+        console.log(`lap time was ${lapDuration}`)
+        console.log(millisecondsPausedSinceLastLap)
+        console.log(currentTime)
+        console.log(lastLapStopwatchTime)
+        lastLapStopwatchTime = currentTime;
         updateLapList(lapDuration);
+        millisecondsPausedSinceLastLap = 0;
     } else {
         // trigger a reset: set timer to 0
-        millisecondsOnTimer = 0;
+        millisecondsPaused = 0;
         lastRecordedStopwatchTime = null;
-        updateTimer();
+        document.getElementById('timer').textContent = '00:00.00';
 
         bestLapTime = Infinity;
         worstLapTime = -Infinity;
@@ -125,12 +130,14 @@ function lapOrResetTimer() {
         // clear laps, clear table
         lapTimes = [];
         lastLapStopwatchTime = null;
+        startingTime = null;
         document.getElementById("lapTable").textContent = '';
     }
 }
 
 // functionality for right button, which starts or stops the timer.
 function toggleTimer() {
+    console.log(`Now ${Date.now()}`)
     let toggleButton = document.getElementById("toggleButton")
     let lapResetButton = document.getElementById("lapResetButton");
     if (isCounting) {
@@ -157,10 +164,16 @@ function toggleTimer() {
         lapResetButton.innerText = "Lap";
         lapResetButton.disabled = false;
 
-        // set date for calculating elapsed time to current date, to ignore
-        // elapsed time while paused.
-        lastRecordedStopwatchTime = Date.now();
+        if (startingTime) {
+            let pauseTime = Date.now() - lastRecordedStopwatchTime;
+            millisecondsPaused += pauseTime;
+            millisecondsPausedSinceLastLap += pauseTime;
+        } else {
+            startingTime = Date.now();
+            lastLapStopwatchTime = Date.now();
+        }
     }
+    lastRecordedStopwatchTime = Date.now();
     isCounting = !isCounting;
 }
 
