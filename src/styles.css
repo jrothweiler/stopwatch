@@ -55,11 +55,16 @@ body {
   background-color: #404040;
 }
 
-#lapTable {
+#lapTableDiv {
   font-family: "Helvetica Neue Roman";
-  width: 100%;
   margin-top: 24px;
+  max-height: 400px;
+  overflow: auto;
+}
+
+#lapTable {
   border-collapse: collapse;
+  width: 100%;
 }
 
 #lapTable tr {
