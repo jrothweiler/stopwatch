@@ -43,7 +43,7 @@ function updateTimer() {
         millisecondsOnTimer += millisecondsElapsed;
         lastRecordedStopwatchTime = currentTime;
     }
-    document.getElementById("timer").innerHTML = formatTimeForTimer(millisecondsOnTimer);
+    document.getElementById("timer").innerText = formatTimeForTimer(millisecondsOnTimer);
 }
 
 // update lap list html with current lap state.
@@ -65,10 +65,10 @@ function updateLapList() {
 
         // create each column, one with lap number, the other with time
         let lapNumber = document.createElement('td');
-        lapNumber.innerHTML = `Lap ${i}`;
+        lapNumber.innerText = `Lap ${i}`;
 
         let lapTime = document.createElement('td');
-        lapTime.innerHTML = formatTimeForTimer(currentLapTime); 
+        lapTime.innerText = formatTimeForTimer(currentLapTime); 
 
         // append the columns to the row, then the row to the table
         tableEntry.appendChild(lapNumber);
@@ -109,7 +109,7 @@ function lapOrResetTimer() {
 
         // go back to disabled lap button
         lapResetButton.disabled = true;
-        lapResetButton.innerHTML = "Lap";
+        lapResetButton.innerText = "Lap";
 
         // clear laps
         lapTimes = [];
@@ -127,23 +127,23 @@ function toggleTimer() {
         clearInterval(countingIntervalId);
 
         // change button back to start timer
-        toggleButton.innerHTML = "Start";
+        toggleButton.innerText = "Start";
         toggleButton.classList.add("stopped");
         toggleButton.classList.remove("started");
 
         // change lap button to reset
-        lapResetButton.innerHTML = "Reset";
+        lapResetButton.innerText = "Reset";
     } else {
         // start timer 
         countingIntervalId = setInterval(updateTimer, 10);
         
         // change button to stop timer
-        toggleButton.innerHTML = "Stop";
+        toggleButton.innerText = "Stop";
         toggleButton.classList.add("started");
         toggleButton.classList.remove("stopped");
 
         // enable lap button
-        lapResetButton.innerHTML = "Lap";
+        lapResetButton.innerText = "Lap";
         lapResetButton.disabled = false;
 
         // set date for calculating elapsed time to current date, to ignore
