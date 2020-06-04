@@ -2,10 +2,10 @@ var isCounting = false;
 var countingIntervalId = -1;
 var millisecondsOnTimer = 0;
 
-// Contains an array of lap times, or how long it took to complete each lap.
+// Array of lap times, or how long it took to complete each lap.
 var lapTimes = [];
 
-// this is the total time on the stopwatch when the last lap time was taken, 
+// total time on the stopwatch when the last lap time was taken, 
 // for use in calculating the next laps total time. 
 // null is interpretted as 0 for first lap.
 var lastLapStopwatchTime = null;
@@ -48,24 +48,29 @@ function updateTimer() {
 
 // update lap list html with current lap state.
 function updateLapList() {
-    console.log(bestLapTime);
-    console.log(worstLapTime);
     let lapTable = document.getElementById("lapTable");
     lapTable.textContent = '';
     for (let i =  1; i <= lapTimes.length; i++) {
-        let lap = lapTimes[i - 1];
+        let currentLapTime = lapTimes[i - 1];
         let tableEntry = document.createElement('tr');
+
+        
         if (bestLapTime != worstLapTime) {
-            if (bestLapTime == lap) {
+            if (bestLapTime == currentLapTime) {
                 tableEntry.classList.add('bestTime');
-            } else if (worstLapTime == lap) {
+            } else if (worstLapTime == currentLapTime) {
                 tableEntry.classList.add('worstTime');
             } 
         }
+
+        // create each column, one with lap number, the other with time
         let lapNumber = document.createElement('td');
-        let lapTime = document.createElement('td');
         lapNumber.innerHTML = `Lap ${i}`;
-        lapTime.innerHTML = formatTimeForTimer(lap); 
+
+        let lapTime = document.createElement('td');
+        lapTime.innerHTML = formatTimeForTimer(currentLapTime); 
+
+        // append the columns to the row, then the row to the table
         tableEntry.appendChild(lapNumber);
         tableEntry.appendChild(lapTime);
         lapTable.appendChild(tableEntry);
@@ -77,8 +82,10 @@ function updateLapList() {
 function lapOrResetTimer() {
     let lapResetButton = document.getElementById("lapResetButton");
     if (isCounting) {
-        // trigger a lap: calculate new lap time, add to array of laps, update html
+        // trigger a lap: calculate new lap time
         let lapDuration = millisecondsOnTimer - lastLapStopwatchTime;
+
+        // update best and worst times if able
         if (lapDuration > worstLapTime) {
             worstLapTime = lapDuration; 
         }
@@ -86,12 +93,13 @@ function lapOrResetTimer() {
             bestLapTime = lapDuration;
         }
 
+        // add to array of laps, update html
         let lapDurationString = lapDuration;
         lapTimes.push(lapDurationString);
         lastLapStopwatchTime = millisecondsOnTimer;
         updateLapList();
     } else {
-        // trigger a reset: set timer to 0, go back to disabled lap button, clear laps
+        // trigger a reset: set timer to 0
         millisecondsOnTimer = 0;
         lastRecordedStopwatchTime = null;
         updateTimer();
@@ -99,9 +107,11 @@ function lapOrResetTimer() {
         bestLapTime = Infinity;
         worstLapTime = -Infinity;
 
+        // go back to disabled lap button
         lapResetButton.disabled = true;
         lapResetButton.innerHTML = "Lap";
 
+        // clear laps
         lapTimes = [];
         lastLapStopwatchTime = null;
         updateLapList();
@@ -113,19 +123,26 @@ function toggleTimer() {
     let toggleButton = document.getElementById("toggleButton")
     let lapResetButton = document.getElementById("lapResetButton");
     if (isCounting) {
-        // stop timer, change button back to start timer, change lap button to reset
+        // stop timer
         clearInterval(countingIntervalId);
+
+        // change button back to start timer
         toggleButton.innerHTML = "Start";
-        lapResetButton.innerHTML = "Reset";
         toggleButton.classList.add("stopped");
         toggleButton.classList.remove("started");
+
+        // change lap button to reset
+        lapResetButton.innerHTML = "Reset";
     } else {
-        // start timer, change button to stop timer, enable lap button
+        // start timer 
         countingIntervalId = setInterval(updateTimer, 10);
+        
+        // change button to stop timer
         toggleButton.innerHTML = "Stop";
         toggleButton.classList.add("started");
         toggleButton.classList.remove("stopped");
 
+        // enable lap button
         lapResetButton.innerHTML = "Lap";
         lapResetButton.disabled = false;
 

@@ -23,13 +23,6 @@ body {
   font-family: "Helvetica Neue";
 }
 
-#lapTable {
-  font-family: "Helvetica Neue Roman";
-  width: 100%;
-  margin-top: 24px;
-  border-collapse: collapse;
-}
-
 #actionButtons {
   display: flex;
   justify-content: space-between;
@@ -41,9 +34,6 @@ body {
   border-radius: 50%;
   color: white;
   border-style: none;
-}
-
-#actionButtons button:focus {
   outline: none;
 }
 
@@ -65,26 +55,35 @@ body {
   background-color: #404040;
 }
 
+#lapTable {
+  font-family: "Helvetica Neue Roman";
+  width: 100%;
+  margin-top: 24px;
+  border-collapse: collapse;
+}
+
+#lapTable tr {
+  height: 32px;
+}
+
+#lapTable td {
+  border-style: solid;
+  border-color: #202020;
+  border-width: 1px 0px;
+}
+
+#lapTable td:nth-child(odd) {
+  text-align: start;
+}
+
+#lapTable td:nth-child(even) {
+  text-align: end;
+}
+
 .bestTime {
   color: green;
 }
 
 .worstTime {
   color: red;
-}
-
-
-#lapTable tr {
-  height: 32px;
-}
-#lapTable td {
-  border-style: solid;
-  border-color: #202020;
-  border-width: 1px 0px;
-}
-#lapTable td:nth-child(odd) {
-  text-align: start;
-}
-#lapTable td:nth-child(even) {
-  text-align: end;
 }
