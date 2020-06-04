@@ -46,34 +46,41 @@ function updateTimer() {
     document.getElementById("timer").innerText = formatTimeForTimer(millisecondsOnTimer);
 }
 
-// update lap list html with current lap state.
-function updateLapList() {
+// update lap list html with the new time entry
+function updateLapList(newTime) {
     let lapTable = document.getElementById("lapTable");
-    lapTable.textContent = '';
-    for (let i =  1; i <= lapTimes.length; i++) {
-        let currentLapTime = lapTimes[i - 1];
-        let tableEntry = document.createElement('tr');
 
+    // Create new table entry for new time
+    let tableEntry = document.createElement('tr');
+
+    let lapNumberElement = document.createElement('td');
+    lapNumberElement.innerText = `Lap ${lapTable.children.length + 1}`;
+
+    let lapTimeElement = document.createElement('td');
+    lapTimeElement.innerText = formatTimeForTimer(newTime); 
+
+    // append the columns to the row, then the row to the table
+    tableEntry.appendChild(lapNumberElement);
+    tableEntry.appendChild(lapTimeElement);
+    lapTable.appendChild(tableEntry);
+
+    // Iterate through new set of children and update 
+    let currentLapRows = document.getElementById("lapTable").children;
+    for (let i =  0; i < lapTimes.length; i++) {
+        let currentRowTime = lapTimes[i];
+        let currentRowElement = currentLapRows[i];
+        let currentRowElementClasses = currentRowElement.classList;
+
+        currentRowElementClasses.remove('bestTime');
+        currentRowElementClasses.remove('worstTime');
         
         if (bestLapTime != worstLapTime) {
-            if (bestLapTime == currentLapTime) {
-                tableEntry.classList.add('bestTime');
-            } else if (worstLapTime == currentLapTime) {
-                tableEntry.classList.add('worstTime');
+            if (bestLapTime == currentRowTime) {
+                currentRowElementClasses.add('bestTime');
+            } else if (worstLapTime == currentRowTime) {
+                currentRowElementClasses.add('worstTime');
             } 
         }
-
-        // create each column, one with lap number, the other with time
-        let lapNumber = document.createElement('td');
-        lapNumber.innerText = `Lap ${i}`;
-
-        let lapTime = document.createElement('td');
-        lapTime.innerText = formatTimeForTimer(currentLapTime); 
-
-        // append the columns to the row, then the row to the table
-        tableEntry.appendChild(lapNumber);
-        tableEntry.appendChild(lapTime);
-        lapTable.appendChild(tableEntry);
     }
 }
 
@@ -97,7 +104,7 @@ function lapOrResetTimer() {
         let lapDurationString = lapDuration;
         lapTimes.push(lapDurationString);
         lastLapStopwatchTime = millisecondsOnTimer;
-        updateLapList();
+        updateLapList(lapDuration);
     } else {
         // trigger a reset: set timer to 0
         millisecondsOnTimer = 0;
@@ -111,10 +118,10 @@ function lapOrResetTimer() {
         lapResetButton.disabled = true;
         lapResetButton.innerText = "Lap";
 
-        // clear laps
+        // clear laps, clear table
         lapTimes = [];
         lastLapStopwatchTime = null;
-        updateLapList();
+        document.getElementById("lapTable").textContent = '';
     }
 }
 
