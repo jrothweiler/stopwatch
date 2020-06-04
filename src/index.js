@@ -1,22 +1,22 @@
-var isCounting = false;
-var countingIntervalId = -1;
-var millisecondsOnTimer = 0;
+let isCounting = false;
+let countingIntervalId = -1;
+let millisecondsOnTimer = 0;
 
 // Array of lap times, or how long it took to complete each lap.
-var lapTimes = [];
+let lapTimes = [];
 
 // total time on the stopwatch when the last lap time was taken, 
 // for use in calculating the next laps total time. 
 // null is interpretted as 0 for first lap.
-var lastLapStopwatchTime = null;
-var bestLapTime = Infinity;
-var worstLapTime = -Infinity;
+let lastLapStopwatchTime = null;
+let bestLapTime = Infinity;
+let worstLapTime = -Infinity;
 
 
 // the previous time to compare against for incrementing the timer.
 // is set to the current time when the start button is clicked, 
 // or when the timer is updated while running.
-var lastRecordedStopwatchTime = null;
+let lastRecordedStopwatchTime = null;
 
 // format a number for use in the timer, i.e. pad numbers less than 10 with leading zeroes
 function padNumber(value) {
