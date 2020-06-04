@@ -62,11 +62,11 @@ function updateLapList(newTime) {
     // append the columns to the row, then the row to the table
     tableEntry.appendChild(lapNumberElement);
     tableEntry.appendChild(lapTimeElement);
-    lapTable.appendChild(tableEntry);
+    lapTable.prepend(tableEntry);
 
     // Iterate through new set of children and update 
     let currentLapRows = document.getElementById("lapTable").children;
-    for (let i =  0; i < lapTimes.length; i++) {
+    for (let i = 0; i < currentLapRows.length; i++) {
         let currentRowTime = lapTimes[i];
         let currentRowElement = currentLapRows[i];
         let currentRowElementClasses = currentRowElement.classList;
@@ -106,8 +106,7 @@ function lapOrResetTimer() {
         }
 
         // add to array of laps, update html
-        let lapDurationString = lapDuration;
-        lapTimes.push(lapDurationString);
+        lapTimes.unshift(lapDuration);
         lastLapStopwatchTime = millisecondsOnTimer;
         updateLapList(lapDuration);
     } else {
