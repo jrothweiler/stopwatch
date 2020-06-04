@@ -81,6 +81,11 @@ function updateLapList(newTime) {
                 currentRowElementClasses.add('worstTime');
             } 
         }
+
+        if (currentLapRows.length >= 10) {
+            let lapTimeElement = currentRowElement.children[1];
+            lapTimeElement.classList.add('scrollVisible')
+        }
     }
 }
 

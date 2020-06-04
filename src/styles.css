@@ -58,7 +58,7 @@ body {
 #lapTableDiv {
   font-family: "Helvetica Neue Roman";
   margin-top: 24px;
-  max-height: 400px;
+  max-height: 320px;
   overflow: auto;
 }
 
@@ -83,6 +83,10 @@ body {
 
 #lapTable td:nth-child(even) {
   text-align: end;
+}
+
+#lapTable td:nth-child(even).scrollVisible {
+  padding-right: 10px;
 }
 
 .bestTime {
