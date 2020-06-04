@@ -43,6 +43,10 @@ body {
   border-style: none;
 }
 
+#actionButtons button:focus {
+  outline: none;
+}
+
 #toggleButton.started {
   background-color: darkred;
   color: red;
