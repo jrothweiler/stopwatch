@@ -14,10 +14,12 @@ let bestLapTime = Infinity;
 let worstLapTime = -Infinity;
 
 
-// the previous time to compare against for incrementing the timer.
-// is set to the current time when the start button is clicked, 
-// or when the timer is updated while running.
-let lastRecordedStopwatchTime = null;
+// the previous Date when the stopwatch was paused or started
+// used at the next toggle to calculate the time elapsed
+// between the two Dates.
+let lastStopwatchToggleTime = null;
+
+// Date the stopwatch was first started at. 
 let startingTime = null;
 
 // format a number for use in the timer, i.e. pad numbers less than 10 with leading zeroes
@@ -62,8 +64,8 @@ function updateLapList(newTime) {
     tableEntry.appendChild(lapTimeElement);
     lapTable.prepend(tableEntry);
 
-    // Iterate through new set of children and update 
-    let currentLapRows = document.getElementById("lapTable").children;
+    // Iterate through new set of children and update color classes
+    let currentLapRows = lapTable.children;
     for (let i = 0; i < currentLapRows.length; i++) {
         let currentRowTime = lapTimes[i];
         let currentRowElement = currentLapRows[i];
@@ -72,6 +74,7 @@ function updateLapList(newTime) {
         currentRowElementClasses.remove('bestTime');
         currentRowElementClasses.remove('worstTime');
         
+        // Ignore case where there is only one lap, making best and worst equal
         if (bestLapTime != worstLapTime) {
             if (bestLapTime == currentRowTime) {
                 currentRowElementClasses.add('bestTime');
@@ -107,18 +110,16 @@ function lapOrResetTimer() {
         // add to array of laps, update html
         lapTimes.unshift(lapDuration);
         
-        console.log(`lap time was ${lapDuration}`)
-        console.log(millisecondsPausedSinceLastLap)
-        console.log(currentTime)
-        console.log(lastLapStopwatchTime)
         lastLapStopwatchTime = currentTime;
         updateLapList(lapDuration);
         millisecondsPausedSinceLastLap = 0;
     } else {
         // trigger a reset: set timer to 0
         millisecondsPaused = 0;
-        lastRecordedStopwatchTime = null;
-        document.getElementById('timer').textContent = '00:00.00';
+        millisecondsPausedSinceLastLap = 0;
+        lastStopwatchToggleTime = null;
+        startingTime = null;
+        document.getElementById('timer').innerText = '00:00.00';
 
         bestLapTime = Infinity;
         worstLapTime = -Infinity;
@@ -130,14 +131,13 @@ function lapOrResetTimer() {
         // clear laps, clear table
         lapTimes = [];
         lastLapStopwatchTime = null;
-        startingTime = null;
-        document.getElementById("lapTable").textContent = '';
+        document.getElementById("lapTable").innerText = '';
     }
 }
 
 // functionality for right button, which starts or stops the timer.
 function toggleTimer() {
-    console.log(`Now ${Date.now()}`)
+    let currentDate = Date.now();
     let toggleButton = document.getElementById("toggleButton")
     let lapResetButton = document.getElementById("lapResetButton");
     if (isCounting) {
@@ -164,16 +164,21 @@ function toggleTimer() {
         lapResetButton.innerText = "Lap";
         lapResetButton.disabled = false;
 
+
         if (startingTime) {
-            let pauseTime = Date.now() - lastRecordedStopwatchTime;
+            // if this is resuming after a pause, calculate pause time and add 
+            // milliseconds paused both overall and since last lap
+            let pauseTime = currentDate - lastStopwatchToggleTime;
             millisecondsPaused += pauseTime;
             millisecondsPausedSinceLastLap += pauseTime;
         } else {
-            startingTime = Date.now();
-            lastLapStopwatchTime = Date.now();
+            // else, if we are starting for the first time,
+            // note the starting time.
+            startingTime = currentDate;
+            lastLapStopwatchTime = currentDate;
         }
     }
-    lastRecordedStopwatchTime = Date.now();
+    lastStopwatchToggleTime = currentDate;
     isCounting = !isCounting;
 }
 
