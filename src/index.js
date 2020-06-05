@@ -29,12 +29,14 @@ function padNumber(value) {
 
 // formats the given centisecond time in MM:SS.CC notation.
 function formatTimeForTimer(elapsedTime) {
-    let milliseconds = elapsedTime % 1000;
-    let centiseconds = Math.round(milliseconds / 10);
-    let seconds = Math.floor(elapsedTime / 1000) % 60;
-    let minutes = Math.floor(elapsedTime / 60000);
+    const milliseconds = elapsedTime % 1000;
+    const [minutes, seconds, centiseconds] = [
+        Math.floor(elapsedTime / 60000),
+        Math.floor(elapsedTime / 1000) % 60,
+        Math.round(milliseconds / 10)
+    ].map(padNumber)
 
-    return `${padNumber(minutes)}:${padNumber(seconds)}.${padNumber(centiseconds)}`
+    return `${minutes}:${seconds}.${centiseconds}`
 }
 
 // updates the timer html with the current centiseconds state,
