@@ -48,6 +48,7 @@ function onTimerChange(newTime) {
     timer.innerText = formatTimeForTimer(newTime);
 
     if (newTime == 0) {
+        // since we cant lap or reset from 0, set to lap and disable
         let lapResetButton = document.getElementById("lapResetButton");
         lapResetButton.disabled = true;
         lapResetButton.innerText = "Lap";
@@ -120,7 +121,6 @@ function updateTimer() {
 function lapOrResetTimer() {
     if (isCounting) {
         let currentTime = Date.now();
-        // trigger a lap: calculate new lap time
         let lapDuration = currentTime - lastLapStopwatchTime - millisecondsPausedSinceLastLap;
 
         // update best and worst times if able
@@ -131,25 +131,24 @@ function lapOrResetTimer() {
             bestLapTime = lapDuration;
         }
 
-        // add to array of laps, update html
         lapTimes.unshift(lapDuration);
         
         lastLapStopwatchTime = currentTime;
-        onLapsChange(lapTimes);
         millisecondsPausedSinceLastLap = 0;
+
+        onLapsChange(lapTimes);
     } else {
-        // trigger a reset: set timer to 0
+        // trigger a reset: set timer state to 0
         millisecondsPaused = 0;
         millisecondsPausedSinceLastLap = 0;
         lastStopwatchToggleTime = null;
         startingTime = null;
 
-        bestLapTime = Infinity;
-        worstLapTime = -Infinity;
-
-        // clear laps, clear table
+        // clear lap state
         lapTimes = [];
         lastLapStopwatchTime = null;
+        bestLapTime = Infinity;
+        worstLapTime = -Infinity;
 
         onLapsChange(lapTimes);
         onTimerChange(0);
