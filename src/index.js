@@ -85,7 +85,7 @@ function onLapsChange(newLaps) {
         // append the columns to the row, then the row to the table
         tableEntry.appendChild(lapNumber);
         tableEntry.appendChild(lapTime);
-        lapTable.appendChild(tableEntry);
+        lapTable.prepend(tableEntry);
     }
 }
 
