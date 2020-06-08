@@ -78,10 +78,14 @@ function onLapsChange(newLaps) {
         let lapTime = document.createElement('td');
         lapTime.innerText = formatTimeForTimer(currentLapTime); 
 
+        if (newLaps.length >= 10) {
+            lapTime.classList.add('scrollVisible');
+        }
+
         // append the columns to the row, then the row to the table
         tableEntry.appendChild(lapNumber);
         tableEntry.appendChild(lapTime);
-        lapTable.prepend(tableEntry);
+        lapTable.appendChild(tableEntry);
     }
 }
 
@@ -131,7 +135,7 @@ function lapOrResetTimer() {
             bestLapTime = lapDuration;
         }
 
-        lapTimes.unshift(lapDuration);
+        lapTimes.push(lapDuration);
         
         lastLapStopwatchTime = currentTime;
         millisecondsPausedSinceLastLap = 0;
